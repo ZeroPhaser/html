@@ -18,37 +18,39 @@
     <div id="messages"></div>
 
     <script>
-        const backendUrl = 'https://ea614638-f988-47a8-b595-209a24f5e1ae-00-18g8l0a0do0yf.sisko.replit.dev';
+        const apiUrl = "https://ea614638-f988-47a8-b595-209a24f5e1ae-00-18g8l0a0do0yf.sisko.replit.dev";
 
         async function fetchMessages() {
-            const res = await fetch(`${backendUrl}/messages`);
+            const res = await fetch(`${apiUrl}/messages`);
             const messages = await res.json();
-            const messageBoard = document.getElementById('messages');
-            messageBoard.innerHTML = '';
+            const messageBoard = document.getElementById("messages");
+            messageBoard.innerHTML = "";
             messages.forEach(msg => {
-                const div = document.createElement('div');
-                div.classList.add('message');
-                div.innerHTML = `<strong>${msg.username}:</strong> ${msg.text}`;
+                const div = document.createElement("div");
+                div.classList.add("message");
+                div.innerHTML = `<strong>${msg.username}:</strong> ${msg.text} <br>
+                                 <small>IP: ${msg.ip} | Device: ${msg.userAgent}</small>`;
                 messageBoard.appendChild(div);
             });
         }
 
         async function sendMessage() {
-            const username = document.getElementById('username').value;
-            const text = document.getElementById('text').value;
-            if (!username || !text) return alert('Please enter both name and message.');
-            
-            await fetch(`${backendUrl}/messages`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+            const username = document.getElementById("username").value;
+            const text = document.getElementById("text").value;
+            if (!username || !text) return alert("Please enter both name and message.");
+
+            await fetch(`${apiUrl}/messages`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, text })
             });
-            document.getElementById('text').value = '';
+
+            document.getElementById("text").value = "";
             fetchMessages();
         }
-        
+
         fetchMessages();
-        setInterval(fetchMessages, 3000); 
+        setInterval(fetchMessages, 3000);
     </script>
 </body>
 </html>
