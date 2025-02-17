@@ -8,6 +8,7 @@
         body { font-family: Arial, sans-serif; text-align: center; }
         #messages { margin-top: 20px; }
         .message { border: 1px solid #ddd; padding: 10px; margin: 5px; border-radius: 5px; }
+        .hidden-info { display: none; }
     </style>
 </head>
 <body>
@@ -26,13 +27,25 @@
             const messages = await res.json();
             const messageBoard = document.getElementById("messages");
             messageBoard.innerHTML = "";
-            messages.forEach(msg => {
+            messages.forEach((msg, index) => {
                 const div = document.createElement("div");
                 div.classList.add("message");
                 div.innerHTML = `<strong>${msg.username}:</strong> ${msg.text} <br>
-                                 <small>IP: ${msg.ip || 'Unknown'} | Device: ${msg.userAgent || 'Unknown'}</small>`;
+                                <button onclick="toggleInfo(${index})">Show</button>
+                                <div id="info-${index}" class="hidden-info">
+                                    <small>IP: ${msg.ip || 'Unknown'} | Device: ${msg.userAgent || 'Unknown'}</small>
+                                </div>`;
                 messageBoard.appendChild(div);
             });
+        }
+
+        function toggleInfo(index) {
+            const infoDiv = document.getElementById(`info-${index}`);
+            if (infoDiv.style.display === "none") {
+                infoDiv.style.display = "block";
+            } else {
+                infoDiv.style.display = "none";
+            }
         }
 
         async function sendMessage() {
